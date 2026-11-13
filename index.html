@@ -1,0 +1,145 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BRABET</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#07130d;color:white;font-family:Arial;text-align:center}
+header{background:#061008;padding:20px;border-bottom:2px solid #19e875}
+h1{color:#20f580;margin:0}
+nav{position:fixed;bottom:0;background:#0c2115;width:100%;display:flex;justify-content:space-around;padding:15px 2px}
+nav button{background:none;border:0;color:#32ed83;font-size:12px}
+main{padding:20px 15px 95px;max-width:480px;margin:auto}
+.card{background:#12301d;border:1px solid #22884d;border-radius:16px;padding:20px;margin:18px 0}
+button.play{background:#23ee7a;color:#05200d;border:0;border-radius:10px;padding:15px 25px;font-weight:bold;font-size:16px}
+.reels{display:flex;justify-content:center;gap:10px;margin:25px 0}
+.reel{background:#06160b;border:1px solid #2f9c5b;border-radius:12px;padding:15px;font-size:42px}
+small,p{color:#b9d9c5}
+section{display:none}
+section.active{display:block}
+</style>
+</head>
+<body>
+<header>
+<h1>BRABET</h1>
+<small>Jogos e diversão</small>
+</header>
+<main>
+<div class="card">
+<h2>🪙 <span id="saldo">1000</span> moedas</h2>
+<small>Saldo virtual sem valor monetário</small>
+</div>
+
+<section id="inicio" class="active">
+<div class="card">
+<h2>🎁 BEM-VINDO À BRABET</h2>
+<p>Ganhe 1.000 moedas virtuais para jogar!</p>
+<button class="play" onclick="abrir('jogos')">JOGAR AGORA</button>
+</div>
+<div class="card">
+<h2>🎰 Selva Neon</h2>
+<p>Caça-níquel original</p>
+<button class="play" onclick="abrir('jogos')">ABRIR JOGO</button>
+</div>
+</section>
+
+<section id="jogos">
+<h2>🎰 SELVA NEON</h2>
+<div class="card">
+<p>10 moedas por rodada</p>
+<div class="reels">
+<div class="reel" id="a">🍀</div>
+<div class="reel" id="b">💎</div>
+<div class="reel" id="c">⭐</div>
+</div>
+<button class="play" onclick="girar()">GIRAR</button>
+<p id="resultado">Boa sorte!</p>
+<p>Três símbolos iguais ganham 50 moedas.</p>
+</div>
+</section>
+
+<section id="promocoes">
+<div class="card">
+<h2>🎁 Promoções</h2>
+<p>1.000 moedas grátis para começar.</p>
+</div>
+</section>
+
+<section id="convidar">
+<div class="card">
+<h2>👥 Convidar amigos</h2>
+<p>Compartilhe a BRABET!</p>
+<button class="play" onclick="compartilhar()">COMPARTILHAR</button>
+</div>
+</section>
+
+<section id="perfil">
+<div class="card">
+<h2>👤 Meu perfil</h2>
+<p>Carteira virtual: <span id="carteira">1000</span> moedas</p>
+<button class="play" onclick="recarregar()">RECARREGAR GRÁTIS</button>
+<p>Sem depósitos, saques ou prêmios reais.</p>
+</div>
+</section>
+</main>
+
+<nav>
+<button onclick="abrir('inicio')">🏠<div>Início</div></button>
+<button onclick="abrir('promocoes')">🎁<div>Promo</div></button>
+<button onclick="abrir('jogos')">🎰<div>Jogos</div></button>
+<button onclick="abrir('convidar')">👥<div>Convidar</div></button>
+<button onclick="abrir('perfil')">👤<div>Perfil</div></button>
+</nav>
+
+<script>
+let saldo=Number(localStorage.getItem("brabet_saldo")??1000);
+if(!Number.isFinite(saldo)||saldo<0)saldo=1000;
+function atualizar(){
+document.getElementById("saldo").textContent=saldo;
+document.getElementById("carteira").textContent=saldo;
+localStorage.setItem("brabet_saldo",saldo);
+}
+function abrir(id){
+document.querySelectorAll("section").forEach(s=>s.classList.remove("active"));
+document.getElementById(id).classList.add("active");
+}
+function girar(){
+if(saldo<10){
+document.getElementById("resultado").textContent="Saldo insuficiente!";
+return;
+}
+saldo-=10;
+let simbolos=["🍀","💎","⭐","🍒","🔔"];
+let r=[];
+for(let i=0;i<3;i++){
+r.push(simbolos[Math.floor(Math.random()*simbolos.length)]);
+}
+["a","b","c"].forEach((id,i)=>{
+document.getElementById(id).textContent=r[i];
+});
+if(r[0]===r[1]&&r[1]===r[2]){
+saldo+=50;
+document.getElementById("resultado").textContent="🎉 Você ganhou 50 moedas!";
+}else{
+document.getElementById("resultado").textContent="Tente novamente!";
+}
+atualizar();
+}
+function recarregar(){
+saldo+=1000;
+atualizar();
+}
+function compartilhar(){
+if(navigator.share){
+navigator.share({title:"BRABET",url:location.href}).catch(()=>{});
+}else{
+alert("Compartilhe o endereço da BRABET com seus amigos.");
+}
+}
+atualizar();
+</script>
+</body>
+</html>
