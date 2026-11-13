@@ -3,143 +3,281 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>BRABET</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Brabet</title>
 <style>
 *{box-sizing:border-box}
-body{margin:0;background:#07130d;color:white;font-family:Arial;text-align:center}
-header{background:#061008;padding:20px;border-bottom:2px solid #19e875}
-h1{color:#20f580;margin:0}
-nav{position:fixed;bottom:0;background:#0c2115;width:100%;display:flex;justify-content:space-around;padding:15px 2px}
-nav button{background:none;border:0;color:#32ed83;font-size:12px}
-main{padding:20px 15px 95px;max-width:480px;margin:auto}
-.card{background:#12301d;border:1px solid #22884d;border-radius:16px;padding:20px;margin:18px 0}
-button.play{background:#23ee7a;color:#05200d;border:0;border-radius:10px;padding:15px 25px;font-weight:bold;font-size:16px}
-.reels{display:flex;justify-content:center;gap:10px;margin:25px 0}
-.reel{background:#06160b;border:1px solid #2f9c5b;border-radius:12px;padding:15px;font-size:42px}
-small,p{color:#b9d9c5}
-section{display:none}
-section.active{display:block}
+body{margin:0;background:#07150d;color:white;font-family:Arial,sans-serif}
+header{background:#061d10;padding:16px;display:flex;justify-content:space-between;align-items:center}
+h1{color:#36f47c;margin:0}
+button{border:0;border-radius:12px;padding:13px;background:#16b957;color:white;font-weight:bold;cursor:pointer}
+button:disabled{opacity:.5}
+input{padding:13px;border-radius:10px;border:0;width:100%;margin:7px 0}
+main,.panel{max-width:600px;margin:15px auto;padding:15px}
+.panel{background:#12301d;border-radius:18px}
+.hidden{display:none!important}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.game{background:linear-gradient(135deg,#25643b,#102719);padding:15px;min-height:115px;border-radius:15px;text-align:left}
+.game span{display:block;font-size:34px}
+.game small{display:block;color:#bde8c8}
+.featured{border:2px solid gold}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+.row button{flex:1}
+.reels{display:flex;gap:7px;justify-content:center;margin:25px 0}
+.reel{background:#ffe4a1;color:#553000;border:3px solid gold;border-radius:13px;font-size:38px;text-align:center;width:31%;padding:18px 0}
+.win{color:#ffe16a;font-weight:bold;text-align:center;min-height:45px}
+nav{position:sticky;bottom:0;background:#061d10;padding:10px;display:flex;justify-content:space-around}
+nav button{padding:10px 5px;font-size:12px}
+.muted{color:#b5d3bf;font-size:13px}
 </style>
 </head>
 <body>
 <header>
 <h1>BRABET</h1>
-<small>Jogos e diversão</small>
+<strong id="saldo">Saldo: 0</strong>
 </header>
-<main>
-<div class="card">
-<h2>🪙 <span id="saldo">1000</span> moedas</h2>
-<small>Saldo virtual sem valor monetário</small>
-</div>
 
-<section id="inicio" class="active">
-<div class="card">
-<h2>🎁 BEM-VINDO À BRABET</h2>
-<p>Ganhe 1.000 moedas virtuais para jogar!</p>
-<button class="play" onclick="abrir('jogos')">JOGAR AGORA</button>
-</div>
-<div class="card">
-<h2>🎰 Selva Neon</h2>
-<p>Caça-níquel original</p>
-<button class="play" onclick="abrir('jogos')">ABRIR JOGO</button>
-</div>
+<section id="login" class="panel">
+<h2 id="tituloLogin">Entrar</h2>
+<input id="usuario" placeholder="Usuário">
+<input id="senha" type="password" placeholder="Senha">
+<button id="botaoLogin" onclick="entrar()">ENTRAR</button>
+<button onclick="alternarCadastro()">Registro / Login</button>
+<p class="muted">Cadastro demonstrativo, salvo somente neste navegador.</p>
 </section>
 
-<section id="jogos">
-<h2>🎰 SELVA NEON</h2>
-<div class="card">
-<p>10 moedas por rodada</p>
-<div class="reels">
-<div class="reel" id="a">🍀</div>
-<div class="reel" id="b">💎</div>
-<div class="reel" id="c">⭐</div>
+<main id="inicio" class="hidden">
+<h2>Jogos populares</h2>
+<p class="muted">50 jogos demonstrativos com moedas virtuais.</p>
+<div class="row">
+<button onclick="filtrar('Todos')">Popular</button>
+<button onclick="filtrar('Animais')">Animais</button>
+<button onclick="filtrar('Fantasia')">Fantasia</button>
+<button onclick="filtrar('Mar')">Mar</button>
 </div>
-<button class="play" onclick="girar()">GIRAR</button>
-<p id="resultado">Boa sorte!</p>
-<p>Três símbolos iguais ganham 50 moedas.</p>
-</div>
-</section>
-
-<section id="promocoes">
-<div class="card">
-<h2>🎁 Promoções</h2>
-<p>1.000 moedas grátis para começar.</p>
-</div>
-</section>
-
-<section id="convidar">
-<div class="card">
-<h2>👥 Convidar amigos</h2>
-<p>Compartilhe a BRABET!</p>
-<button class="play" onclick="compartilhar()">COMPARTILHAR</button>
-</div>
-</section>
-
-<section id="perfil">
-<div class="card">
-<h2>👤 Meu perfil</h2>
-<p>Carteira virtual: <span id="carteira">1000</span> moedas</p>
-<button class="play" onclick="recarregar()">RECARREGAR GRÁTIS</button>
-<p>Sem depósitos, saques ou prêmios reais.</p>
-</div>
-</section>
+<div id="catalogo" class="grid"></div>
 </main>
 
-<nav>
-<button onclick="abrir('inicio')">🏠<div>Início</div></button>
-<button onclick="abrir('promocoes')">🎁<div>Promo</div></button>
-<button onclick="abrir('jogos')">🎰<div>Jogos</div></button>
-<button onclick="abrir('convidar')">👥<div>Convidar</div></button>
-<button onclick="abrir('perfil')">👤<div>Perfil</div></button>
+<section id="jogo" class="panel hidden">
+<button onclick="mostrarInicio()">Voltar</button>
+<h2 id="nomeJogo"></h2>
+<div class="reels">
+<div class="reel" id="r0">⭐</div>
+<div class="reel" id="r1">💎</div>
+<div class="reel" id="r2">🍀</div>
+</div>
+<p id="resultado" class="win">Boa sorte!</p>
+<p>Aposta: <strong id="valorAposta">0,50</strong> moedas</p>
+<input type="range" id="aposta" min="0" max="6" value="0" oninput="atualizarAposta()">
+<div class="row">
+<button id="girar" onclick="giro()">GIRAR</button>
+<button id="turbo" onclick="mudarTurbo()">Turbo OFF</button>
+<button id="som" onclick="mudarSom()">Som OFF</button>
+</div>
+<div id="areaBonus">
+<button id="comprar" onclick="comprarBonus()">Comprar bônus: 30 moedas</button>
+<button id="iniciar" class="hidden" onclick="iniciarBonus()">INICIAR</button>
+<p id="infoBonus"></p>
+</div>
+</section>
+
+<nav id="menu" class="hidden">
+<button onclick="mostrarInicio()">Início</button>
+<button onclick="alert('Em desenvolvimento')">Promoção</button>
+<button onclick="alert('Em desenvolvimento')">Convidar</button>
+<button onclick="alert('Sem depósitos nesta demonstração')">Depósito</button>
+<button onclick="sair()">Sair</button>
 </nav>
 
 <script>
-let saldo=Number(localStorage.getItem("brabet_saldo")??1000);
-if(!Number.isFinite(saldo)||saldo<0)saldo=1000;
-function atualizar(){
-document.getElementById("saldo").textContent=saldo;
-document.getElementById("carteira").textContent=saldo;
-localStorage.setItem("brabet_saldo",saldo);
+const nomes=[
+"Rabbit","Ox","Tiger","Fox","Dragon",
+"Panda","Phoenix","Lion","Wolf","Koala",
+"Eagle","Dolphin","Bear","Monkey","Horse",
+"Turtle","Owl","Jaguar","Shark","Parrot",
+"Butterfly","Bee","Frog","Penguin","Deer",
+"Unicorn","Cobra","Peacock","Elephant","Giraffe",
+"Zebra","Hippo","Crocodile","Flamingo","Otter",
+"Raccoon","Squirrel","Hedgehog","Bat","Whale",
+"Octopus","Crab","Seahorse","Starfish","Lynx",
+"Falcon","Bison","Llama","Toucan","Capybara"
+];
+const icones=[
+"🐰","🐂","🐯","🦊","🐉",
+"🐼","🔥","🦁","🐺","🐨",
+"🦅","🐬","🐻","🐵","🐴",
+"🐢","🦉","🐆","🦈","🦜",
+"🦋","🐝","🐸","🐧","🦌",
+"🦄","🐍","🦚","🐘","🦒",
+"🦓","🦛","🐊","🦩","🦦",
+"🦝","🐿️","🦔","🦇","🐳",
+"🐙","🦀","🐠","⭐","🐈",
+"🦅","🦬","🦙","🦜","🐹"
+];
+const jogos=nomes.map((nome,i)=>({
+nome,
+icone:icones[i],
+categoria:i>=39&&i<=43?"Mar":i===4||i===6||i===25?"Fantasia":"Animais",
+bonus:i%3===0
+}));
+const apostas=[0.5,1,2,5,10,50,500];
+const $=id=>document.getElementById(id);
+const formatar=n=>n.toLocaleString("pt-BR",{minimumFractionDigits:2,maximumFractionDigits:2});
+let usuario="",saldo=0,cadastro=false,atual=0;
+let turbo=false,som=false,ocupado=false;
+let bonusPendente=0,girosGratis=0,audio=null;
+
+function salvar(){
+if(usuario)localStorage.setItem("brabet_saldo_"+usuario,String(saldo));
+$("saldo").textContent="Saldo: "+formatar(saldo);
 }
-function abrir(id){
-document.querySelectorAll("section").forEach(s=>s.classList.remove("active"));
-document.getElementById(id).classList.add("active");
+function alternarCadastro(){
+cadastro=!cadastro;
+$("tituloLogin").textContent=cadastro?"Registro":"Entrar";
+$("botaoLogin").textContent=cadastro?"CADASTRAR":"ENTRAR";
 }
-function girar(){
-if(saldo<10){
-document.getElementById("resultado").textContent="Saldo insuficiente!";
+function entrar(){
+let u=$("usuario").value.trim();
+let s=$("senha").value;
+if(u.length<3||s.length<4){
+alert("Digite usuário e senha com pelo menos 3 e 4 caracteres.");
 return;
 }
-saldo-=10;
-let simbolos=["🍀","💎","⭐","🍒","🔔"];
-let r=[];
-for(let i=0;i<3;i++){
-r.push(simbolos[Math.floor(Math.random()*simbolos.length)]);
+let chave="brabet_conta_"+u;
+let existente=localStorage.getItem(chave);
+if(cadastro){
+if(existente!==null){alert("Usuário já existe");return;}
+localStorage.setItem(chave,s);
+localStorage.setItem("brabet_saldo_"+u,"1000");
+}else if(existente!==s){
+alert("Usuário ou senha incorretos");return;
 }
-["a","b","c"].forEach((id,i)=>{
-document.getElementById(id).textContent=r[i];
+usuario=u;
+saldo=Number(localStorage.getItem("brabet_saldo_"+u))||0;
+salvar();
+mostrarInicio();
+}
+function sair(){
+usuario="";
+$("login").classList.remove("hidden");
+$("inicio").classList.add("hidden");
+$("jogo").classList.add("hidden");
+$("menu").classList.add("hidden");
+}
+function mostrarInicio(){
+if(ocupado)return;
+$("login").classList.add("hidden");
+$("jogo").classList.add("hidden");
+$("inicio").classList.remove("hidden");
+$("menu").classList.remove("hidden");
+filtrar("Todos");
+}
+function filtrar(categoria){
+$("catalogo").innerHTML="";
+jogos.forEach((g,i)=>{
+if(categoria!=="Todos"&&g.categoria!==categoria)return;
+let b=document.createElement("button");
+b.className="game"+(i<2?" featured":"");
+b.innerHTML="<span>"+g.icone+"</span><b>Brabet "+g.nome+"</b><small>"+g.categoria+"</small>";
+b.onclick=()=>abrirJogo(i);
+$("catalogo").appendChild(b);
 });
-if(r[0]===r[1]&&r[1]===r[2]){
-saldo+=50;
-document.getElementById("resultado").textContent="🎉 Você ganhou 50 moedas!";
-}else{
-document.getElementById("resultado").textContent="Tente novamente!";
 }
-atualizar();
+function abrirJogo(i){
+atual=i;
+bonusPendente=0;
+girosGratis=0;
+$("inicio").classList.add("hidden");
+$("jogo").classList.remove("hidden");
+$("nomeJogo").textContent=jogos[i].icone+" Brabet "+jogos[i].nome;
+$("resultado").textContent="Boa sorte!";
+$("areaBonus").classList.toggle("hidden",!jogos[i].bonus);
+$("comprar").classList.remove("hidden");
+$("iniciar").classList.add("hidden");
+$("infoBonus").textContent="";
+atualizarAposta();
 }
-function recarregar(){
-saldo+=1000;
-atualizar();
+function atualizarAposta(){
+$("valorAposta").textContent=formatar(apostas[Number($("aposta").value)]);
 }
-function compartilhar(){
-if(navigator.share){
-navigator.share({title:"BRABET",url:location.href}).catch(()=>{});
-}else{
-alert("Compartilhe o endereço da BRABET com seus amigos.");
+function mudarTurbo(){
+turbo=!turbo;
+$("turbo").textContent=turbo?"Turbo ON":"Turbo OFF";
 }
+function mudarSom(){
+som=!som;
+$("som").textContent=som?"Som ON":"Som OFF";
+if(som)nota(440);
 }
-atualizar();
+function nota(freq){
+if(!som)return;
+try{
+audio=audio||new (window.AudioContext||window.webkitAudioContext)();
+let o=audio.createOscillator(),v=audio.createGain();
+o.frequency.value=freq;
+v.gain.value=.035;
+o.connect(v);v.connect(audio.destination);
+o.start();o.stop(audio.currentTime+.12);
+}catch(e){}
+}
+const esperar=ms=>new Promise(r=>setTimeout(r,ms));
+async function executarGiro(){
+ocupado=true;
+$("girar").disabled=true;
+const simbolos=[jogos[atual].icone,"💎","⭐","🍀","🪙","👑"];
+for(let t=0;t<(turbo?3:9);t++){
+for(let i=0;i<3;i++){
+$("r"+i).textContent=simbolos[Math.floor(Math.random()*simbolos.length)];
+}
+await esperar(turbo?40:90);
+}
+let resultado=Array.from({length:3},()=>simbolos[Math.floor(Math.random()*simbolos.length)]);
+resultado.forEach((s,i)=>$("r"+i).textContent=s);
+let aposta=apostas[Number($("aposta").value)];
+let premio=0;
+if(resultado.every(x=>x===resultado[0]))premio=aposta*10;
+else if(resultado[0]===resultado[1]||resultado[1]===resultado[2])premio=aposta*2;
+saldo+=premio;
+salvar();
+$("resultado").textContent=premio>0?"✨ GANHOU "+formatar(premio)+" MOEDAS!":"Tente novamente!";
+if(premio>0)nota(880);
+ocupado=false;
+$("girar").disabled=false;
+}
+async function giro(){
+if(ocupado||bonusPendente||girosGratis)return;
+let aposta=apostas[Number($("aposta").value)];
+if(saldo<aposta){alert("Saldo insuficiente");return;}
+saldo-=aposta;
+salvar();
+await executarGiro();
+}
+function comprarBonus(){
+if(ocupado||bonusPendente)return;
+if(saldo<30){alert("Saldo insuficiente");return;}
+saldo-=30;
+salvar();
+bonusPendente=10+Math.floor(Math.random()*6);
+$("infoBonus").textContent=bonusPendente+" giros especiais!";
+$("comprar").classList.add("hidden");
+$("iniciar").classList.remove("hidden");
+}
+async function iniciarBonus(){
+if(!bonusPendente||ocupado)return;
+girosGratis=bonusPendente;
+bonusPendente=0;
+$("iniciar").classList.add("hidden");
+while(girosGratis>0){
+await executarGiro();
+girosGratis--;
+if(Math.random()<.04)girosGratis+=2;
+$("infoBonus").textContent="Giros restantes: "+girosGratis;
+await esperar(turbo?80:350);
+}
+$("infoBonus").textContent="Bônus encerrado!";
+$("comprar").classList.remove("hidden");
+}
+atualizarAposta();
 </script>
 </body>
 </html>
